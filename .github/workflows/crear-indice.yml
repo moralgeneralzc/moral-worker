@@ -9,12 +9,30 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Llamar funcion via REST
+      - name: Crear indice y verificar
         run: |
-          curl -X POST \
-            "https://xhnurftxuinlycmbsgij.supabase.co/rest/v1/rpc/crear_indice_hnsw" \
-            -H "apikey: ${{ secrets.SUPABASE_SERVICE_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_KEY }}" \
+          BASE="https://xhnurftxuinlycmbsgij.supabase.co/rest/v1/rpc"
+          KEY="${{ secrets.SUPABASE_SERVICE_KEY }}"
+
+          echo "Lanzando creacion del indice..."
+          curl -s -X POST "$BASE/crear_indice_hnsw_bg" \
+            -H "apikey: $KEY" \
+            -H "Authorization: Bearer $KEY" \
             -H "Content-Type: application/json" \
-            --max-time 1800 \
-            -v
+            --max-time 1800 &
+
+          echo "Esperando que se construya el indice..."
+          for i in $(seq 1 20); do
+            sleep 60
+            echo "Verificando ($i/20)..."
+            RESULT=$(curl -s -X POST "$BASE/verificar_indice" \
+              -H "apikey: $KEY" \
+              -H "Authorization: Bearer $KEY" \
+              -H "Content-Type: application/json")
+            echo "Estado: $RESULT"
+            if echo "$RESULT" | grep -q "existe"; then
+              echo "Indice creado exitosamente!"
+              exit 0
+            fi
+          done
+          echo "Timeout - verificar manualmente en Supabase"
