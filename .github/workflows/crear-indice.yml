@@ -9,49 +9,40 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Instalar psycopg2
-        run: pip install psycopg2-binary
-
-      - name: Crear indice HNSW
+      - name: Crear indice HNSW via API
         run: |
           python3 << 'EOF'
-          import psycopg2
-          import socket
+          import urllib.request
+          import json
+          import time
 
-          # Resolver manualmente la IP IPv4
-          host = "db.xhnurftxuinlycmbsgij.supabase.co"
-          ipv4 = None
-          for res in socket.getaddrinfo(host, 5432, socket.AF_INET):
-              ipv4 = res[4][0]
-              break
+          PROJECT_REF = "xhnurftxuinlycmbsgij"
+          ACCESS_TOKEN = "${{ secrets.SUPABASE_ACCESS_TOKEN }}"
 
-          print(f"IP IPv4 resuelta: {ipv4}")
+          sql = """
+          CREATE INDEX IF NOT EXISTS fragmentos_embedding_hnsw_idx
+          ON fragmentos
+          USING hnsw ((embedding::halfvec(2048)) halfvec_cosine_ops)
+          WITH (m = 16, ef_construction = 64);
+          """
 
-          if not ipv4:
-              raise Exception("No se pudo resolver IPv4")
-
-          # Conectar directamente a la IP
-          print("Conectando a Supabase via IPv4...")
-          conn = psycopg2.connect(
-              host=ipv4,
-              port=5432,
-              user="postgres",
-              password="Sucre1552..",
-              dbname="postgres",
-              connect_timeout=30,
-              options=f"-c sslmode=require"
+          url = f"https://api.supabase.com/v1/projects/{PROJECT_REF}/database/query"
+          data = json.dumps({"query": sql}).encode()
+          req = urllib.request.Request(
+              url,
+              data=data,
+              headers={
+                  "Authorization": f"Bearer {ACCESS_TOKEN}",
+                  "Content-Type": "application/json"
+              },
+              method="POST"
           )
-          conn.autocommit = True
-          cur = conn.cursor()
-          print("Conectado! Creando indice (puede tardar varios minutos)...")
-          cur.execute("SET statement_timeout = '1200000'")
-          cur.execute("""
-              CREATE INDEX IF NOT EXISTS fragmentos_embedding_hnsw_idx
-              ON fragmentos
-              USING hnsw ((embedding::halfvec(2048)) halfvec_cosine_ops)
-              WITH (m = 16, ef_construction = 64)
-          """)
-          print("Indice creado exitosamente!")
-          cur.close()
-          conn.close()
+
+          print("Creando indice HNSW via Supabase API...")
+          print("Esto puede tardar varios minutos...")
+
+          with urllib.request.urlopen(req, timeout=1800) as resp:
+              result = json.loads(resp.read())
+              print("Resultado:", result)
+              print("Indice creado exitosamente!")
           EOF
