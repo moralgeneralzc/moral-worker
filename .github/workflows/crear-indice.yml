@@ -9,40 +9,12 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Crear indice HNSW via API
+      - name: Llamar funcion via REST
         run: |
-          python3 << 'EOF'
-          import urllib.request
-          import json
-          import time
-
-          PROJECT_REF = "xhnurftxuinlycmbsgij"
-          ACCESS_TOKEN = "${{ secrets.SUPABASE_ACCESS_TOKEN }}"
-
-          sql = """
-          CREATE INDEX IF NOT EXISTS fragmentos_embedding_hnsw_idx
-          ON fragmentos
-          USING hnsw ((embedding::halfvec(2048)) halfvec_cosine_ops)
-          WITH (m = 16, ef_construction = 64);
-          """
-
-          url = f"https://api.supabase.com/v1/projects/{PROJECT_REF}/database/query"
-          data = json.dumps({"query": sql}).encode()
-          req = urllib.request.Request(
-              url,
-              data=data,
-              headers={
-                  "Authorization": f"Bearer {ACCESS_TOKEN}",
-                  "Content-Type": "application/json"
-              },
-              method="POST"
-          )
-
-          print("Creando indice HNSW via Supabase API...")
-          print("Esto puede tardar varios minutos...")
-
-          with urllib.request.urlopen(req, timeout=1800) as resp:
-              result = json.loads(resp.read())
-              print("Resultado:", result)
-              print("Indice creado exitosamente!")
-          EOF
+          curl -X POST \
+            "https://xhnurftxuinlycmbsgij.supabase.co/rest/v1/rpc/crear_indice_hnsw" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_KEY }}" \
+            -H "Content-Type: application/json" \
+            --max-time 1800 \
+            -v
