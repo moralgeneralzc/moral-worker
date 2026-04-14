@@ -18,24 +18,32 @@ jobs:
           import psycopg2
           import socket
 
-          # Forzar IPv4
-          orig = socket.getaddrinfo
-          def ipv4_only(host, port, family=0, *args, **kwargs):
-              return orig(host, port, socket.AF_INET, *args, **kwargs)
-          socket.getaddrinfo = ipv4_only
+          # Resolver manualmente la IP IPv4
+          host = "db.xhnurftxuinlycmbsgij.supabase.co"
+          ipv4 = None
+          for res in socket.getaddrinfo(host, 5432, socket.AF_INET):
+              ipv4 = res[4][0]
+              break
 
-          print("Conectando a Supabase...")
+          print(f"IP IPv4 resuelta: {ipv4}")
+
+          if not ipv4:
+              raise Exception("No se pudo resolver IPv4")
+
+          # Conectar directamente a la IP
+          print("Conectando a Supabase via IPv4...")
           conn = psycopg2.connect(
-              host="db.xhnurftxuinlycmbsgij.supabase.co",
+              host=ipv4,
               port=5432,
               user="postgres",
               password="Sucre1552..",
               dbname="postgres",
-              connect_timeout=30
+              connect_timeout=30,
+              options=f"-c sslmode=require"
           )
           conn.autocommit = True
           cur = conn.cursor()
-          print("Conectado! Creando indice HNSW (puede tardar varios minutos)...")
+          print("Conectado! Creando indice (puede tardar varios minutos)...")
           cur.execute("SET statement_timeout = '1200000'")
           cur.execute("""
               CREATE INDEX IF NOT EXISTS fragmentos_embedding_hnsw_idx
