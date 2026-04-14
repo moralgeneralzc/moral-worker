@@ -12,9 +12,13 @@ jobs:
       - name: Instalar psql
         run: sudo apt-get install -y postgresql-client
 
-      - name: Crear indice HNSW
+      - name: Forzar IPv4 y crear indice HNSW
         run: |
-          psql "${{ secrets.SUPABASE_DB_URL }}" << 'EOF'
+          # Resolver el host y obtener la IP IPv4
+          HOST_IP=$(dig +short A db.xhnurftxuinlycmbsgij.supabase.co | head -1)
+          echo "Conectando a IP: $HOST_IP"
+          
+          PGPASSWORD='Sucre1552..' psql -h "$HOST_IP" -U postgres -d postgres -p 5432 << 'EOF'
           SET statement_timeout = '1200000';
           CREATE INDEX IF NOT EXISTS fragmentos_embedding_hnsw_idx
           ON fragmentos
