@@ -9,20 +9,41 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Instalar psql
-        run: sudo apt-get install -y postgresql-client
+      - name: Instalar psycopg2
+        run: pip install psycopg2-binary
 
-      - name: Forzar IPv4 y crear indice HNSW
+      - name: Crear indice HNSW
         run: |
-          # Resolver el host y obtener la IP IPv4
-          HOST_IP=$(dig +short A db.xhnurftxuinlycmbsgij.supabase.co | head -1)
-          echo "Conectando a IP: $HOST_IP"
-          
-          PGPASSWORD='Sucre1552..' psql -h "$HOST_IP" -U postgres -d postgres -p 5432 << 'EOF'
-          SET statement_timeout = '1200000';
-          CREATE INDEX IF NOT EXISTS fragmentos_embedding_hnsw_idx
-          ON fragmentos
-          USING hnsw ((embedding::halfvec(2048)) halfvec_cosine_ops)
-          WITH (m = 16, ef_construction = 64);
-          \echo 'Indice creado exitosamente'
+          python3 << 'EOF'
+          import psycopg2
+          import socket
+
+          # Forzar IPv4
+          orig = socket.getaddrinfo
+          def ipv4_only(host, port, family=0, *args, **kwargs):
+              return orig(host, port, socket.AF_INET, *args, **kwargs)
+          socket.getaddrinfo = ipv4_only
+
+          print("Conectando a Supabase...")
+          conn = psycopg2.connect(
+              host="db.xhnurftxuinlycmbsgij.supabase.co",
+              port=5432,
+              user="postgres",
+              password="Sucre1552..",
+              dbname="postgres",
+              connect_timeout=30
+          )
+          conn.autocommit = True
+          cur = conn.cursor()
+          print("Conectado! Creando indice HNSW (puede tardar varios minutos)...")
+          cur.execute("SET statement_timeout = '1200000'")
+          cur.execute("""
+              CREATE INDEX IF NOT EXISTS fragmentos_embedding_hnsw_idx
+              ON fragmentos
+              USING hnsw ((embedding::halfvec(2048)) halfvec_cosine_ops)
+              WITH (m = 16, ef_construction = 64)
+          """)
+          print("Indice creado exitosamente!")
+          cur.close()
+          conn.close()
           EOF
