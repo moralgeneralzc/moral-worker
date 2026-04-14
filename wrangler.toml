@@ -1,0 +1,11 @@
+name = "moral-general-zc"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+# Las variables sensibles NO van acá — se cargan como secrets
+
+# Para agregar los secrets correr:
+# npx wrangler secret put OPENROUTER_KEY
+# npx wrangler secret put SUPABASE_URL
+# npx wrangler secret put SUPABASE_KEY
