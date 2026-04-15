@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Moral General y Especial — Seminario Diocesano</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
     * { font-family: 'Calibri', 'Candara', 'Segoe UI', Arial, sans-serif; box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
@@ -52,6 +53,21 @@
     @keyframes blink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
     .fade-in { animation: fi .3s ease; }
     @keyframes fi { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+
+    /* MARKDOWN en chat-bot */
+    .md-content { font-size: 15px; line-height: 1.75; color: #333; }
+    .md-content h1, .md-content h2, .md-content h3 { font-weight: 700; margin: 12px 0 6px; color: #1a1a2e; }
+    .md-content h1 { font-size: 18px; }
+    .md-content h2 { font-size: 16px; }
+    .md-content h3 { font-size: 15px; color: #4F46E5; }
+    .md-content p { margin: 6px 0; }
+    .md-content ul, .md-content ol { padding-left: 20px; margin: 6px 0; }
+    .md-content li { margin: 4px 0; }
+    .md-content strong { font-weight: 700; color: #1a1a2e; }
+    .md-content em { font-style: italic; color: #555; }
+    .md-content blockquote { border-left: 3px solid #4F46E5; padding-left: 12px; color: #555; margin: 8px 0; font-style: italic; }
+    .md-content hr { border: none; border-top: 1px solid #e8eaed; margin: 12px 0; }
+    .md-content code { background: #F0F2F5; padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: monospace; }
 
     /* MISC */
     ::-webkit-scrollbar { width: 5px; }
@@ -177,20 +193,20 @@
     <button class="pill" onclick="setF('Magisterio',this)">Magisterio</button>
   </div>
 
-  <div class="card mb-5" style="max-width:860px">
-    <div id="msgs" class="p-6 space-y-5 overflow-y-auto" style="min-height:300px;max-height:52vh">
+  <div class="card mb-5" style="max-width:900px">
+    <div id="msgs" class="p-6 space-y-5 overflow-y-auto" style="min-height:400px;max-height:68vh">
       <div class="fade-in flex gap-3">
         <div class="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mt-0.5">
           <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
         </div>
-        <div class="chat-bot px-5 py-4" style="max-width:640px">
+        <div class="chat-bot px-5 py-4" style="max-width:720px">
           <p style="font-size:15px;line-height:1.7;color:#333">Hola. Soy tu asistente para que aprendas más y mejor. Podes preguntarme sobre los temas de Moral General (actos humanos, conciencia, ley moral, virtudes, pecado) y Moral Especial (Decalogo, familia, bioética, sexualidad). Respondo basándome exclusivamente en las fuentes de la materia.</p>
         </div>
       </div>
     </div>
     <div class="border-t border-gray-100 p-5">
       <div class="flex gap-3 items-end">
-        <textarea id="inp" rows="1" placeholder="Escribe tu pregunta..." class="flex-1 resize-none border border-gray-200 rounded-xl px-4 py-3 bg-gray-50" style="font-size:15px;font-family:inherit;max-width:700px" onkeydown="hk(event)" oninput="rs(this)"></textarea>
+        <textarea id="inp" rows="1" placeholder="Escribe tu pregunta..." class="flex-1 resize-none border border-gray-200 rounded-xl px-4 py-3 bg-gray-50" style="font-size:15px;font-family:inherit;max-width:780px" onkeydown="hk(event)" oninput="rs(this)"></textarea>
         <button onclick="send()" id="sbtn" class="w-11 h-11 rounded-xl bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-700 transition-colors flex-shrink-0">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
         </button>
@@ -246,81 +262,27 @@
     </div>
 
     <div id="moral1" class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#4F46E5">I</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">Nocion y Naturaleza de la Teologia Moral</p><p style="font-size:13px;color:#666;line-height:1.5">Nocion y objeto · Fuentes: Escritura, Tradicion, Magisterio · La llamada universal a la santidad · El Sermon de la Montaña</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#4F46E5">II</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">El Fundamento de la Moralidad</p><p style="font-size:13px;color:#666;line-height:1.5">Moral y Religion · El hombre como ser moral · Unidad radical de la persona · Libertad, conciencia, norma moral</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#4F46E5">III</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">El Fin Ultimo del Hombre</p><p style="font-size:13px;color:#666;line-height:1.5">Dios como fin ultimo · La gloria de Dios · Caracteristicas del fin sobrenatural · Errores actuales</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#2563EB">IV</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">La Libertad Humana</p><p style="font-size:13px;color:#666;line-height:1.5">Existencia y definicion · Libertad, Verdad y Bien · Libertad y responsabilidad · Merito, gracia y libertad</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#2563EB">V</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">Los Actos Libres del Hombre</p><p style="font-size:13px;color:#666;line-height:1.5">Los actos humanos · Defectos de conocimiento · Deficiencias en la libertad · La accion de doble efecto</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#059669">VI</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">La Conciencia Moral</p><p style="font-size:13px;color:#666;line-height:1.5">Definicion y division · Libertad de conciencia · Conciencia y verdad · Formacion de la conciencia</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#059669">VII</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">La Ley Moral</p><p style="font-size:13px;color:#666;line-height:1.5">Clases de leyes · Ley natural · Ley positiva · La ley nueva del Evangelio · Libertad, conciencia y ley</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#D97706">VIII</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">Las Virtudes</p><p style="font-size:13px;color:#666;line-height:1.5">Virtudes adquiridas e infusas · Virtudes teologales · Virtudes morales cardinales · Cristo modelo de virtud</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#E11D48">IX</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">El Pecado</p><p style="font-size:13px;color:#666;line-height:1.5">El pecado en la Biblia · Definicion y division · La opcion fundamental · Principios morales</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#7C3AED">X</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">La Conversion del Pecador</p><p style="font-size:13px;color:#666;line-height:1.5">La llamada a la conversion · Lucha ascetica · El Sacramento de la Penitencia y Reconciliacion</p></div>
-      </div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#4F46E5">I</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">Nocion y Naturaleza de la Teologia Moral</p><p style="font-size:13px;color:#666;line-height:1.5">Nocion y objeto · Fuentes: Escritura, Tradicion, Magisterio · La llamada universal a la santidad · El Sermon de la Montaña</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#4F46E5">II</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">El Fundamento de la Moralidad</p><p style="font-size:13px;color:#666;line-height:1.5">Moral y Religion · El hombre como ser moral · Unidad radical de la persona · Libertad, conciencia, norma moral</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#4F46E5">III</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">El Fin Ultimo del Hombre</p><p style="font-size:13px;color:#666;line-height:1.5">Dios como fin ultimo · La gloria de Dios · Caracteristicas del fin sobrenatural · Errores actuales</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#2563EB">IV</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">La Libertad Humana</p><p style="font-size:13px;color:#666;line-height:1.5">Existencia y definicion · Libertad, Verdad y Bien · Libertad y responsabilidad · Merito, gracia y libertad</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#2563EB">V</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">Los Actos Libres del Hombre</p><p style="font-size:13px;color:#666;line-height:1.5">Los actos humanos · Defectos de conocimiento · Deficiencias en la libertad · La accion de doble efecto</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#059669">VI</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">La Conciencia Moral</p><p style="font-size:13px;color:#666;line-height:1.5">Definicion y division · Libertad de conciencia · Conciencia y verdad · Formacion de la conciencia</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#059669">VII</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">La Ley Moral</p><p style="font-size:13px;color:#666;line-height:1.5">Clases de leyes · Ley natural · Ley positiva · La ley nueva del Evangelio · Libertad, conciencia y ley</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#D97706">VIII</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">Las Virtudes</p><p style="font-size:13px;color:#666;line-height:1.5">Virtudes adquiridas e infusas · Virtudes teologales · Virtudes morales cardinales · Cristo modelo de virtud</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#E11D48">IX</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">El Pecado</p><p style="font-size:13px;color:#666;line-height:1.5">El pecado en la Biblia · Definicion y division · La opcion fundamental · Principios morales</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#7C3AED">X</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">La Conversion del Pecador</p><p style="font-size:13px;color:#666;line-height:1.5">La llamada a la conversion · Lucha ascetica · El Sacramento de la Penitencia y Reconciliacion</p></div></div>
     </div>
 
     <div id="moral2" class="grid grid-cols-1 lg:grid-cols-2 gap-3 hidden">
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#4F46E5">I</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">Introduccion a la Moral Especial</p><p style="font-size:13px;color:#666;line-height:1.5">Los Diez Mandamientos · Obligacion del Decalogo · Mandamientos, virtudes y bienaventuranzas · Ateismo y Agnosticismo</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#2563EB">II</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">«Adoraras al Senor tu Dios» — I Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">Fe, esperanza y caridad · La virtud de la religion · Libertad religiosa · Pecados contra la religion</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#059669">III</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">II y III Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">El juramento y sus clases · El voto y su cumplimiento · Santificar las fiestas · Los mandamientos de la Iglesia</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#D97706">IV</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">«Honraras a tu padre y madre» — IV Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">El matrimonio cristiano · La familia en el plan de Dios · Deberes de esposos, padres e hijos · La sociedad</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#E11D48">V</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">«No mataras» — V Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">El valor de la vida · Aborto · Eutanasia · Suicidio · Legitima defensa · Fecundacion artificial · Bioética</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#7C3AED">VI</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">«No cometeras adulterio» — VI Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">La virtud de la castidad · Ofensas a la castidad · El amor de los esposos · Paternidad responsable</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-teal-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#0F766E">VII</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">«No diras falso testimonio» — VIII Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">La virtud de la veracidad · La mentira · El secreto · Libertad de expresion · El martirio</p></div>
-      </div>
-      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50">
-        <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#EA580C">VIII</div>
-        <div><p style="font-size:15px;font-weight:600;margin-bottom:3px">«No desearas» — IX y X Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">Pecados internos · Virtud del desprendimiento · Rechazo del fariseismo · La busqueda de la santidad</p></div>
-      </div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#4F46E5">I</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">Introduccion a la Moral Especial</p><p style="font-size:13px;color:#666;line-height:1.5">Los Diez Mandamientos · Obligacion del Decalogo · Mandamientos, virtudes y bienaventuranzas · Ateismo y Agnosticismo</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#2563EB">II</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">«Adoraras al Senor tu Dios» — I Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">Fe, esperanza y caridad · La virtud de la religion · Libertad religiosa · Pecados contra la religion</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#059669">III</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">II y III Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">El juramento y sus clases · El voto y su cumplimiento · Santificar las fiestas · Los mandamientos de la Iglesia</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#D97706">IV</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">«Honraras a tu padre y madre» — IV Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">El matrimonio cristiano · La familia en el plan de Dios · Deberes de esposos, padres e hijos · La sociedad</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#E11D48">V</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">«No mataras» — V Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">El valor de la vida · Aborto · Eutanasia · Suicidio · Legitima defensa · Fecundacion artificial · Bioética</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#7C3AED">VI</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">«No cometeras adulterio» — VI Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">La virtud de la castidad · Ofensas a la castidad · El amor de los esposos · Paternidad responsable</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-teal-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#0F766E">VII</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">«No diras falso testimonio» — VIII Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">La virtud de la veracidad · La mentira · El secreto · Libertad de expresion · El martirio</p></div></div>
+      <div class="flex gap-4 items-start p-4 rounded-xl bg-gray-50"><div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0" style="font-size:13px;font-weight:700;color:#EA580C">VIII</div><div><p style="font-size:15px;font-weight:600;margin-bottom:3px">«No desearas» — IX y X Mandamiento</p><p style="font-size:13px;color:#666;line-height:1.5">Pecados internos · Virtud del desprendimiento · Rechazo del fariseismo · La busqueda de la santidad</p></div></div>
     </div>
   </div>
 
@@ -471,55 +433,13 @@
     <input type="text" oninput="fg(this.value)" placeholder="Buscar termino..." class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50" style="font-size:15px;font-family:inherit"/>
   </div>
   <div id="glos" class="space-y-6">
-    <div class="gg">
-      <p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">A</p>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Acto humano</p><span class="badge">S.Th. I-II, q. 1</span></div><p style="font-size:14px;color:#555;line-height:1.65">Accion que procede de la voluntad deliberada del hombre. Se distingue del acto del hombre (que no implica deliberacion). Es el objeto propio de la moral.</p></div>
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Apetito</p><span class="badge">S.Th. I-II, q. 8</span></div><p style="font-size:14px;color:#555;line-height:1.65">Tendencia o inclinacion hacia el bien. En el hombre: apetito sensitivo (sensualidad) y apetito racional (voluntad).</p></div>
-      </div>
-    </div>
-    <div class="gg">
-      <p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">B</p>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Bienaventuranza</p><span class="badge">S.Th. I-II, qq. 1-5</span></div><p style="font-size:14px;color:#555;line-height:1.65">Fin ultimo del hombre; consiste en la vision beatifica de Dios. Tomas distingue la bienaventuranza perfecta (sobrenatural) de la imperfecta (natural).</p></div>
-      </div>
-    </div>
-    <div class="gg">
-      <p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">C</p>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Castidad</p><span class="badge">S.Th. II-II, q. 151</span></div><p style="font-size:14px;color:#555;line-height:1.65">Virtud que modera el deseo sexual segun la recta razon. No es mera represion sino ordenacion del amor humano al bien integral de la persona.</p></div>
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Conciencia moral</p><span class="badge">S.Th. I-II, q. 19</span></div><p style="font-size:14px;color:#555;line-height:1.65">Juicio practico de la razon sobre la bondad o malicia de un acto concreto. No crea la ley moral, sino que la aplica al caso particular.</p></div>
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Circunstancias</p><span class="badge">S.Th. I-II, q. 7</span></div><p style="font-size:14px;color:#555;line-height:1.65">Condiciones accidentales que rodean al acto moral. Pueden modificar su bondad o malicia pero no cambian la especie moral del acto intrinsecamente malo.</p></div>
-      </div>
-    </div>
-    <div class="gg">
-      <p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">L</p>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Ley eterna</p><span class="badge">S.Th. I-II, q. 91, a.1</span></div><p style="font-size:14px;color:#555;line-height:1.65">La razon divina que gobierna todo el universo. Es el fundamento ultimo de toda ley. <em>Ratio divinae sapientiae, secundum quod est directiva omnium actuum.</em></p></div>
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Ley natural</p><span class="badge">S.Th. I-II, q. 94</span></div><p style="font-size:14px;color:#555;line-height:1.65">Participacion de la criatura racional en la ley eterna. Primer precepto: <em>bonum est faciendum et prosequendum, et malum vitandum.</em></p></div>
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Libertad</p><span class="badge">S.Th. I-II, q. 13</span></div><p style="font-size:14px;color:#555;line-height:1.65">Capacidad del hombre de autodeterminarse hacia el bien. La libertad autentica no es hacer lo que se quiere sino ordenarse libremente al bien verdadero (VS, n. 35).</p></div>
-      </div>
-    </div>
-    <div class="gg">
-      <p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">O</p>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Objeto moral</p><span class="badge">S.Th. I-II, q. 18</span></div><p style="font-size:14px;color:#555;line-height:1.65">El bien elegido por la voluntad deliberada. Es el elemento primario que especifica moralmente el acto humano, con independencia de la intencion del agente.</p></div>
-      </div>
-    </div>
-    <div class="gg">
-      <p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">P</p>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Pecado</p><span class="badge">S.Th. I-II, q. 71</span></div><p style="font-size:14px;color:#555;line-height:1.65">Acto, palabra o deseo contrario a la ley eterna. Es una aversion a Dios (conversio ad creaturam) y una privacion del orden recto.</p></div>
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Prudencia</p><span class="badge">S.Th. II-II, q. 47</span></div><p style="font-size:14px;color:#555;line-height:1.65">Virtud cardinal que dispone la razon practica para discernir el verdadero bien y elegir los medios rectos. <em>Auriga virtutum.</em></p></div>
-      </div>
-    </div>
-    <div class="gg">
-      <p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">V</p>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Virtud</p><span class="badge">S.Th. I-II, q. 55</span></div><p style="font-size:14px;color:#555;line-height:1.65">Habito operativo bueno que perfecciona las potencias del alma en orden al bien. <em>Virtus est bona qualitas mentis, qua recte vivitur.</em></p></div>
-        <div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Voluntad</p><span class="badge">S.Th. I-II, q. 8</span></div><p style="font-size:14px;color:#555;line-height:1.65">Apetito racional cuyo objeto es el bien universal. Solo puede ser movida por el bien verdadero o aparente.</p></div>
-      </div>
-    </div>
+    <div class="gg"><p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">A</p><div class="grid grid-cols-1 lg:grid-cols-2 gap-3"><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Acto humano</p><span class="badge">S.Th. I-II, q. 1</span></div><p style="font-size:14px;color:#555;line-height:1.65">Accion que procede de la voluntad deliberada del hombre. Se distingue del acto del hombre (que no implica deliberacion). Es el objeto propio de la moral.</p></div><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Apetito</p><span class="badge">S.Th. I-II, q. 8</span></div><p style="font-size:14px;color:#555;line-height:1.65">Tendencia o inclinacion hacia el bien. En el hombre: apetito sensitivo (sensualidad) y apetito racional (voluntad).</p></div></div></div>
+    <div class="gg"><p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">B</p><div class="grid grid-cols-1 lg:grid-cols-2 gap-3"><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Bienaventuranza</p><span class="badge">S.Th. I-II, qq. 1-5</span></div><p style="font-size:14px;color:#555;line-height:1.65">Fin ultimo del hombre; consiste en la vision beatifica de Dios. Tomas distingue la bienaventuranza perfecta (sobrenatural) de la imperfecta (natural).</p></div></div></div>
+    <div class="gg"><p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">C</p><div class="grid grid-cols-1 lg:grid-cols-2 gap-3"><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Castidad</p><span class="badge">S.Th. II-II, q. 151</span></div><p style="font-size:14px;color:#555;line-height:1.65">Virtud que modera el deseo sexual segun la recta razon. No es mera represion sino ordenacion del amor humano al bien integral de la persona.</p></div><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Conciencia moral</p><span class="badge">S.Th. I-II, q. 19</span></div><p style="font-size:14px;color:#555;line-height:1.65">Juicio practico de la razon sobre la bondad o malicia de un acto concreto. No crea la ley moral, sino que la aplica al caso particular.</p></div><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Circunstancias</p><span class="badge">S.Th. I-II, q. 7</span></div><p style="font-size:14px;color:#555;line-height:1.65">Condiciones accidentales que rodean al acto moral. Pueden modificar su bondad o malicia pero no cambian la especie moral del acto intrinsecamente malo.</p></div></div></div>
+    <div class="gg"><p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">L</p><div class="grid grid-cols-1 lg:grid-cols-2 gap-3"><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Ley eterna</p><span class="badge">S.Th. I-II, q. 91, a.1</span></div><p style="font-size:14px;color:#555;line-height:1.65">La razon divina que gobierna todo el universo. Es el fundamento ultimo de toda ley. <em>Ratio divinae sapientiae, secundum quod est directiva omnium actuum.</em></p></div><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Ley natural</p><span class="badge">S.Th. I-II, q. 94</span></div><p style="font-size:14px;color:#555;line-height:1.65">Participacion de la criatura racional en la ley eterna. Primer precepto: <em>bonum est faciendum et prosequendum, et malum vitandum.</em></p></div><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Libertad</p><span class="badge">S.Th. I-II, q. 13</span></div><p style="font-size:14px;color:#555;line-height:1.65">Capacidad del hombre de autodeterminarse hacia el bien. La libertad autentica no es hacer lo que se quiere sino ordenarse libremente al bien verdadero (VS, n. 35).</p></div></div></div>
+    <div class="gg"><p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">O</p><div class="grid grid-cols-1 lg:grid-cols-2 gap-3"><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Objeto moral</p><span class="badge">S.Th. I-II, q. 18</span></div><p style="font-size:14px;color:#555;line-height:1.65">El bien elegido por la voluntad deliberada. Es el elemento primario que especifica moralmente el acto humano, con independencia de la intencion del agente.</p></div></div></div>
+    <div class="gg"><p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">P</p><div class="grid grid-cols-1 lg:grid-cols-2 gap-3"><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Pecado</p><span class="badge">S.Th. I-II, q. 71</span></div><p style="font-size:14px;color:#555;line-height:1.65">Acto, palabra o deseo contrario a la ley eterna. Es una aversion a Dios (conversio ad creaturam) y una privacion del orden recto.</p></div><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Prudencia</p><span class="badge">S.Th. II-II, q. 47</span></div><p style="font-size:14px;color:#555;line-height:1.65">Virtud cardinal que dispone la razon practica para discernir el verdadero bien y elegir los medios rectos. <em>Auriga virtutum.</em></p></div></div></div>
+    <div class="gg"><p style="font-size:28px;font-weight:700;color:#4F46E5;margin-bottom:12px">V</p><div class="grid grid-cols-1 lg:grid-cols-2 gap-3"><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Virtud</p><span class="badge">S.Th. I-II, q. 55</span></div><p style="font-size:14px;color:#555;line-height:1.65">Habito operativo bueno que perfecciona las potencias del alma en orden al bien. <em>Virtus est bona qualitas mentis, qua recte vivitur.</em></p></div><div class="gi card p-5"><div class="flex items-start justify-between mb-2"><p style="font-size:16px;font-weight:700">Voluntad</p><span class="badge">S.Th. I-II, q. 8</span></div><p style="font-size:14px;color:#555;line-height:1.65">Apetito racional cuyo objeto es el bien universal. Solo puede ser movida por el bien verdadero o aparente.</p></div></div></div>
   </div>
 </section>
 
@@ -531,44 +451,20 @@
   </div>
   <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
     <div class="card overflow-hidden">
-      <div class="flex items-center justify-between px-6 py-4 bg-indigo-600">
-        <p style="font-size:16px;font-weight:700;color:#fff">Moral I — Segundo Curso</p>
-        <span style="font-size:12px;color:#c7d2fe">26 oct — 14 dic</span>
-      </div>
+      <div class="flex items-center justify-between px-6 py-4 bg-indigo-600"><p style="font-size:16px;font-weight:700;color:#fff">Moral I — Segundo Curso</p><span style="font-size:12px;color:#c7d2fe">26 oct — 14 dic</span></div>
       <div class="divide-y divide-gray-50">
-        <div class="flex items-center gap-5 px-6 py-4 hover:bg-gray-50 transition-colors">
-          <div class="text-center w-14 flex-shrink-0"><p style="font-size:11px;color:#aaa">Oct</p><p style="font-size:22px;font-weight:700;color:#4F46E5">26</p></div>
-          <div class="flex-1"><p style="font-size:15px;font-weight:500">Clase 1 — Nocion y Naturaleza de la Teologia Moral</p><p style="font-size:13px;color:#aaa">Virtual · Horario a confirmar</p></div>
-          <div class="w-2.5 h-2.5 rounded-full bg-indigo-400 flex-shrink-0"></div>
-        </div>
-        <div class="flex items-center gap-5 px-6 py-4 hover:bg-gray-50 transition-colors">
-          <div class="text-center w-14 flex-shrink-0"><p style="font-size:11px;color:#aaa">Dic</p><p style="font-size:22px;font-weight:700;color:#E11D48">14</p></div>
-          <div class="flex-1"><p style="font-size:15px;font-weight:500">Evaluacion Final — Trabajo Practico</p><p style="font-size:13px;color:#aaa">Preparar un encuentro de catequesis sobre una unidad</p></div>
-          <div class="w-2.5 h-2.5 rounded-full bg-red-400 flex-shrink-0"></div>
-        </div>
+        <div class="flex items-center gap-5 px-6 py-4 hover:bg-gray-50 transition-colors"><div class="text-center w-14 flex-shrink-0"><p style="font-size:11px;color:#aaa">Oct</p><p style="font-size:22px;font-weight:700;color:#4F46E5">26</p></div><div class="flex-1"><p style="font-size:15px;font-weight:500">Clase 1 — Nocion y Naturaleza de la Teologia Moral</p><p style="font-size:13px;color:#aaa">Virtual · Horario a confirmar</p></div><div class="w-2.5 h-2.5 rounded-full bg-indigo-400 flex-shrink-0"></div></div>
+        <div class="flex items-center gap-5 px-6 py-4 hover:bg-gray-50 transition-colors"><div class="text-center w-14 flex-shrink-0"><p style="font-size:11px;color:#aaa">Dic</p><p style="font-size:22px;font-weight:700;color:#E11D48">14</p></div><div class="flex-1"><p style="font-size:15px;font-weight:500">Evaluacion Final — Trabajo Practico</p><p style="font-size:13px;color:#aaa">Preparar un encuentro de catequesis sobre una unidad</p></div><div class="w-2.5 h-2.5 rounded-full bg-red-400 flex-shrink-0"></div></div>
       </div>
     </div>
     <div class="card overflow-hidden">
-      <div class="flex items-center justify-between px-6 py-4 bg-indigo-600">
-        <p style="font-size:16px;font-weight:700;color:#fff">Moral II — Tercer Curso</p>
-        <span style="font-size:12px;color:#c7d2fe">1 mar — 10 may</span>
-      </div>
+      <div class="flex items-center justify-between px-6 py-4 bg-indigo-600"><p style="font-size:16px;font-weight:700;color:#fff">Moral II — Tercer Curso</p><span style="font-size:12px;color:#c7d2fe">1 mar — 10 may</span></div>
       <div class="divide-y divide-gray-50">
-        <div class="flex items-center gap-5 px-6 py-4 hover:bg-gray-50 transition-colors">
-          <div class="text-center w-14 flex-shrink-0"><p style="font-size:11px;color:#aaa">Mar</p><p style="font-size:22px;font-weight:700;color:#4F46E5">1</p></div>
-          <div class="flex-1"><p style="font-size:15px;font-weight:500">Clase 1 — Introduccion a la Moral Especial</p><p style="font-size:13px;color:#aaa">Virtual · Horario a confirmar</p></div>
-          <div class="w-2.5 h-2.5 rounded-full bg-indigo-400 flex-shrink-0"></div>
-        </div>
-        <div class="flex items-center gap-5 px-6 py-4 hover:bg-gray-50 transition-colors">
-          <div class="text-center w-14 flex-shrink-0"><p style="font-size:11px;color:#aaa">May</p><p style="font-size:22px;font-weight:700;color:#E11D48">10</p></div>
-          <div class="flex-1"><p style="font-size:15px;font-weight:500">Evaluacion Final — Examen Oral</p><p style="font-size:13px;color:#aaa">Dos unidades a eleccion. El profesor puede preguntar sobre las demas.</p></div>
-          <div class="w-2.5 h-2.5 rounded-full bg-red-400 flex-shrink-0"></div>
-        </div>
+        <div class="flex items-center gap-5 px-6 py-4 hover:bg-gray-50 transition-colors"><div class="text-center w-14 flex-shrink-0"><p style="font-size:11px;color:#aaa">Mar</p><p style="font-size:22px;font-weight:700;color:#4F46E5">1</p></div><div class="flex-1"><p style="font-size:15px;font-weight:500">Clase 1 — Introduccion a la Moral Especial</p><p style="font-size:13px;color:#aaa">Virtual · Horario a confirmar</p></div><div class="w-2.5 h-2.5 rounded-full bg-indigo-400 flex-shrink-0"></div></div>
+        <div class="flex items-center gap-5 px-6 py-4 hover:bg-gray-50 transition-colors"><div class="text-center w-14 flex-shrink-0"><p style="font-size:11px;color:#aaa">May</p><p style="font-size:22px;font-weight:700;color:#E11D48">10</p></div><div class="flex-1"><p style="font-size:15px;font-weight:500">Evaluacion Final — Examen Oral</p><p style="font-size:13px;color:#aaa">Dos unidades a eleccion. El profesor puede preguntar sobre las demas.</p></div><div class="w-2.5 h-2.5 rounded-full bg-red-400 flex-shrink-0"></div></div>
       </div>
     </div>
-    <div class="card p-5 text-center opacity-50 xl:col-span-2">
-      <p style="font-size:14px;color:#aaa">El cronograma detallado sera publicado al inicio de cada curso</p>
-    </div>
+    <div class="card p-5 text-center opacity-50 xl:col-span-2"><p style="font-size:14px;color:#aaa">El cronograma detallado sera publicado al inicio de cada curso</p></div>
   </div>
 </section>
 
@@ -579,6 +475,22 @@
 const WORKER="https://moral-general-zc.moralgeneralzc.workers.dev";
 const SID="s_"+Math.random().toString(36).substr(2,9);
 let filtro=null,hist=[];
+
+// Parser de markdown inline (sin dependencias externas)
+function renderMd(text) {
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/^### (.+)$/gm,'<h3 style="font-size:15px;font-weight:700;color:#4F46E5;margin:10px 0 4px">$1</h3>')
+    .replace(/^## (.+)$/gm,'<h2 style="font-size:16px;font-weight:700;color:#1a1a2e;margin:12px 0 5px">$1</h2>')
+    .replace(/^# (.+)$/gm,'<h1 style="font-size:18px;font-weight:700;color:#1a1a2e;margin:12px 0 5px">$1</h1>')
+    .replace(/^---+$/gm,'<hr style="border:none;border-top:1px solid #e8eaed;margin:10px 0">')
+    .replace(/^\d+\. (.+)$/gm,'<div style="padding:2px 0 2px 18px;position:relative"><span style="position:absolute;left:0;color:#4F46E5;font-weight:600">·</span>$1</div>')
+    .replace(/^[-*] (.+)$/gm,'<div style="padding:2px 0 2px 18px;position:relative"><span style="position:absolute;left:0;color:#4F46E5">•</span>$1</div>')
+    .replace(/\n\n/g,'<br><br>')
+    .replace(/\n/g,'<br>');
+}
 
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
@@ -601,19 +513,32 @@ function addMsg(role,text,fuentes){
   const d=document.createElement('div');
   d.className='fade-in flex gap-3'+(role==='user'?' justify-end':'');
   if(role==='user'){
-    d.innerHTML=`<div class="chat-user px-5 py-3" style="max-width:560px;font-size:15px">${esc(text)}</div>`;
-  }else{
-    const ft=fuentes&&fuentes.length?`<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;padding-top:12px;border-top:1px solid #e8eaed">${fuentes.map(f=>`<span class="badge">${esc(f.fuente)} · ${esc((f.obra||'').split(',')[0])}</span>`).join('')}</div>`:'';
-    d.innerHTML=`<div class="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div><div class="chat-bot px-5 py-4 flex-1" style="max-width:640px"><p style="font-size:15px;line-height:1.75;white-space:pre-wrap">${esc(text)}</p>${ft}</div>`;
+    d.innerHTML=`<div class="chat-user px-5 py-3" style="max-width:600px;font-size:15px">${esc(text)}</div>`;
+  } else {
+    const ft = fuentes && fuentes.length
+      ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;padding-top:12px;border-top:1px solid #e8eaed">${fuentes.map(f=>`<span class="badge">${esc(f.fuente)} · ${esc((f.obra||'').split(',')[0])}</span>`).join('')}</div>`
+      : '';
+    const htmlContent = renderMd(text);
+    d.innerHTML=`
+      <div class="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+      </div>
+      <div class="chat-bot px-5 py-4" style="max-width:760px;flex:1">
+        <div class="md-content">${htmlContent}</div>
+        ${ft}
+      </div>`;
   }
-  c.appendChild(d);c.scrollTop=c.scrollHeight;
+  c.appendChild(d);
+  c.scrollTop=c.scrollHeight;
 }
+
 function addTyping(){
   const c=document.getElementById('msgs');
   const d=document.createElement('div');d.id='ty';d.className='fade-in flex gap-3';
   d.innerHTML=`<div class="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0"><svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div><div class="chat-bot px-5 py-4"><div style="display:flex;gap:5px;align-items:center;height:20px"><div class="typing-dot" style="width:7px;height:7px;border-radius:50%;background:#9ca3af"></div><div class="typing-dot" style="width:7px;height:7px;border-radius:50%;background:#9ca3af"></div><div class="typing-dot" style="width:7px;height:7px;border-radius:50%;background:#9ca3af"></div></div></div>`;
   c.appendChild(d);c.scrollTop=c.scrollHeight;
 }
+
 async function send(){
   const inp=document.getElementById('inp');
   const q=inp.value.trim();if(!q)return;
@@ -629,12 +554,14 @@ async function send(){
   }catch(e){const ty=document.getElementById('ty');if(ty)ty.remove();addMsg('bot','No se pudo conectar con el servidor.');}
   document.getElementById('sbtn').disabled=false;
 }
+
 function acc(id){const b=document.getElementById('body-'+id);const a=document.getElementById('arr-'+id);b.classList.toggle('open');a.style.transform=b.classList.contains('open')?'rotate(180deg)':'';}
 function switchTab(id,btn){
   document.getElementById('moral1').classList.add('hidden');document.getElementById('moral2').classList.add('hidden');
   document.getElementById(id).classList.remove('hidden');
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
 }
+
 const QS={
   ley:{titulo:'La Ley Moral',qs:[
     {q:'Segun Santo Tomas, la ley natural es:',ops:['Una norma creada por el Estado','La participacion de la criatura racional en la ley eterna','Un conjunto de costumbres sociales','La voluntad arbitraria de Dios'],c:1,ex:'En S.Th. I-II, q. 91, a. 2, Tomas define la ley natural como participatio legis aeternae in rationali creatura.'},
@@ -653,6 +580,7 @@ const QS={
     {q:'Que ensena la Iglesia sobre la obligacion del Decalogo?',ops:['Es meramente opcional para los bautizados','Obliga solo a los judios por la Alianza sinaítica','Obliga a todos los hombres en cuanto expresa la ley natural','Solo obliga en materia grave'],c:2,ex:'El Decalogo obliga a todos los hombres porque expresa los deberes fundamentales del hombre hacia Dios y hacia el projimo, que se derivan de la ley natural (CCC, n. 2072).'}
   ]}
 };
+
 let qA=null,qI=0,qP=0;
 function startQ(id){qA=QS[id];qI=0;qP=0;document.getElementById('qlist').classList.add('hidden');document.getElementById('qbox').classList.remove('hidden');document.getElementById('qt').textContent=qA.titulo;renderQ();}
 function renderQ(){

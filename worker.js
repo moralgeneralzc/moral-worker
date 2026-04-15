@@ -1,5 +1,5 @@
 // worker.js — Chatbot RAG Moral General y Especial
-// Con Query Translation: español → latín escolástico → embedding → respuesta en español
+// Query Translation: español → latín escolástico → embedding → respuesta en español
 // Deploy: npx wrangler deploy
 
 const EMBEDDING_MODEL = "nvidia/llama-nemotron-embed-vl-1b-v2:free";
@@ -23,13 +23,13 @@ export default {
       // 1. Traducir la pregunta al latín escolástico
       const preguntaLatina = await traducirAlLatin(pregunta, env.OPENROUTER_KEY);
 
-      // 2. Generar embedding del latín (mucho mejor similitud con el corpus)
+      // 2. Generar embedding del latín
       const embedding = await generarEmbedding(preguntaLatina, env.OPENROUTER_KEY);
       if (!embedding) {
         return jsonResponse({ error: "Error generando embedding" }, 500);
       }
 
-      // 3. Buscar fragmentos relevantes en Supabase
+      // 3. Buscar fragmentos relevantes en Neon
       const fragmentos = await buscarFragmentos(embedding, env, filtro_fuente);
 
       // 4. Si no hay fragmentos relevantes, responder sin inventar
@@ -92,14 +92,11 @@ Traducción latina:`
 
     const data = await response.json();
     const traduccion = data?.choices?.[0]?.message?.content?.trim();
-
-    // Si la traducción falla o es muy corta, usar la pregunta original
     if (!traduccion || traduccion.length < 5) return pregunta;
     return traduccion;
 
   } catch (e) {
-    console.error("Error traduciendo al latín:", e);
-    return pregunta; // Fallback a español si falla
+    return pregunta;
   }
 }
 
@@ -123,42 +120,40 @@ async function generarEmbedding(texto, apiKey) {
     const data = await response.json();
     return data?.data?.[0]?.embedding ?? null;
   } catch (e) {
-    console.error("Error generando embedding:", e);
     return null;
   }
 }
 
 // =============================================================
-// PASO 3: Buscar fragmentos en Supabase
+// PASO 3: Buscar fragmentos en Neon
 // =============================================================
 
 async function buscarFragmentos(embedding, env, filtroFuente = null) {
-  const body = {
-    query_embedding: embedding,
-    match_threshold: 0.30,  // Umbral bajo por corpus latino
-    match_count: 6,
-    filtro_fuente: filtroFuente ?? null
-  };
+  const embStr = "[" + embedding.join(",") + "]";
+
+  const query = filtroFuente
+    ? `SELECT id, fuente, obra, referencia, contenido, 1 - (embedding::halfvec(2048) <=> '${embStr}'::halfvec(2048)) AS similitud FROM fragmentos WHERE 1 - (embedding::halfvec(2048) <=> '${embStr}'::halfvec(2048)) > 0.30 AND fuente = '${filtroFuente}' ORDER BY embedding::halfvec(2048) <=> '${embStr}'::halfvec(2048) LIMIT 6`
+    : `SELECT id, fuente, obra, referencia, contenido, 1 - (embedding::halfvec(2048) <=> '${embStr}'::halfvec(2048)) AS similitud FROM fragmentos WHERE 1 - (embedding::halfvec(2048) <=> '${embStr}'::halfvec(2048)) > 0.30 ORDER BY embedding::halfvec(2048) <=> '${embStr}'::halfvec(2048) LIMIT 6`;
 
   const response = await fetch(
-    `${env.SUPABASE_URL}/rest/v1/rpc/buscar_fragmentos`,
+    "https://ep-hidden-mode-anw2shmo.c-6.us-east-1.aws.neon.tech/sql",
     {
       method: "POST",
       headers: {
-        "apikey": env.SUPABASE_KEY,
-        "Authorization": `Bearer ${env.SUPABASE_KEY}`,
+        "Neon-Connection-String": env.NEON_FULL_URL,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify({ query })
     }
   );
 
   if (!response.ok) {
-    console.error("Error Supabase:", await response.text());
+    console.error("Error Neon:", await response.text());
     return [];
   }
 
-  return await response.json();
+  const data = await response.json();
+  return data.rows || [];
 }
 
 // =============================================================
@@ -167,12 +162,10 @@ async function buscarFragmentos(embedding, env, filtroFuente = null) {
 
 async function generarRespuesta(preguntaEspanol, preguntaLatina, fragmentos, historial, apiKey) {
 
-  // Construir contexto con fragmentos latinos
   const contexto = fragmentos.map((f, i) =>
     `[${i + 1}] ${f.obra} (${f.referencia}):\n"${f.contenido}"`
   ).join("\n\n");
 
-  // Fuentes para el frontend
   const fuentes = fragmentos.map(f => ({
     fuente: f.fuente,
     obra: f.obra,
@@ -180,7 +173,6 @@ async function generarRespuesta(preguntaEspanol, preguntaLatina, fragmentos, his
     similitud: Math.round(f.similitud * 100)
   }));
 
-  // Construir historial de conversación
   const mensajesHistorial = (historial || []).flatMap(h => [
     { role: "user", content: h.pregunta },
     { role: "assistant", content: h.respuesta }
@@ -220,7 +212,7 @@ RESPUESTA EN ESPAÑOL:`;
         ...mensajesHistorial,
         { role: "user", content: prompt }
       ],
-      max_tokens: 1200,
+      max_tokens: 2000,
       temperature: 0.2
     })
   });
@@ -232,25 +224,29 @@ RESPUESTA EN ESPAÑOL:`;
 }
 
 // =============================================================
-// HISTORIAL
+// HISTORIAL (usa Neon también)
 // =============================================================
 
 async function guardarHistorial(sessionId, pregunta, respuesta, fuentes, env) {
   if (!sessionId) return;
-  await fetch(`${env.SUPABASE_URL}/rest/v1/conversaciones`, {
-    method: "POST",
-    headers: {
-      "apikey": env.SUPABASE_KEY,
-      "Authorization": `Bearer ${env.SUPABASE_KEY}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      session_id: sessionId,
-      pregunta,
-      respuesta,
-      fuentes_usadas: fuentes
-    })
-  });
+  const query = `
+    INSERT INTO conversaciones (session_id, pregunta, respuesta, fuentes_usadas)
+    VALUES ($1, $2, $3, $4)
+  `;
+  await fetch(
+    "https://ep-hidden-mode-anw2shmo.c-6.us-east-1.aws.neon.tech/sql",
+    {
+      method: "POST",
+      headers: {
+        "Neon-Connection-String": env.NEON_FULL_URL,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        query,
+        params: [sessionId, pregunta, respuesta, JSON.stringify(fuentes)]
+      })
+    }
+  );
 }
 
 // =============================================================
